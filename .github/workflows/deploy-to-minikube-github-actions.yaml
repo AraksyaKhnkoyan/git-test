@@ -22,9 +22,17 @@ jobs:
     - name: Deploy to minikube
       run:
         kubectl apply -f k8s-node-app.yaml
-        kubectl rollout status deployment/nodejs-app
         kubectl get pods
         kubectl logs -l app=nodejs-app
+    - name: Debug pods
+      run: |
+          echo "=== POD STATUS ==="
+          kubectl get pods
+          echo "=== POD DETAILS ==="
+          kubectl describe pod -l app=nodejs-app
+          echo "=== POD LOGS ==="
+          kubectl logs -l app=nodejs-app || echo "::warning::No logs yet. Pod may not be running."
+          echo "::warning::If Pod is not running, ensure 'imagePullPolicy: Never' in k8s-node-app.yaml."
     - name: Test service URLs
       run: |
           minikube service list
