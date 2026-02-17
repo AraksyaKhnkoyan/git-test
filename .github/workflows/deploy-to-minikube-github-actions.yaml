@@ -22,6 +22,10 @@ jobs:
     - name: Deploy to minikube
       run:
         kubectl apply -f k8s-node-app.yaml
+    - name: Wait for deployment to complete
+      run: kubectl rollout status deployment/nodejs-app
+    - name: Wait a few seconds
+      run: sleep 10
     - name: Debug pods
       run: |
           echo "=== POD STATUS ==="
